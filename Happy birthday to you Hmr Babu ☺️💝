@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday Website</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Canvas Confetti Library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+
+    <!-- Step 1: Letter / Envelope -->
+    <section id="step-letter" class="container">
+        <h2>A Letter, Just For You</h2>
+        <p class="subtitle">Tap the envelope to unseal</p>
+        
+        <div class="envelope" id="envelope-btn">
+            <div class="heart-icon">❤️</div>
+            <p>For You, My Curious</p>
+            <span class="small-text">TAP TO UNSEAL ✨</span>
+        </div>
+
+        <!-- Popup Modal Message -->
+        <div class="modal hidden" id="letter-modal">
+            <div class="modal-content">
+                <h3>Happy Birthday ✨</h3>
+                <p class="sub-header">Just for you ♡</p>
+                <div class="letter-body">
+                    <p>Happiest birthday my gurl! 🥳</p>
+                    <p>I pray you achieve all your dreams, stay happy, and keep smiling the way you do...</p>
+                    <p>because that smile is my favorite thing 🥹</p>
+                    <p>Everyday is your day because you are the main character... and YOU KNOW IT 😎</p>
+                    <p>Let's share unlimited laughs, love, fights, and happiness 🎈</p>
+                    <p>I love you forever and ever and ever</p>
+                </div>
+                <button id="to-cake-btn" class="next-btn">Next ➔</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Step 2: Cake Cutting -->
+    <section id="step-cake" class="container hidden">
+        <h2>Swipe to Cut the Cake! 🎂</h2>
+        <p class="subtitle">Drag your finger/cursor to slice</p>
+        
+        <div class="cake-wrapper" id="cake-container">
+            <img src="https://i.postimg.co/28P3QvGq/pixel-cake.png" id="cake-img" alt="Cake">
+            <div id="slice-progress">0%</div>
+        </div>
+
+        <div id="cake-wishes" class="hidden">
+            <h1 class="celebrate-title">Happy Birthday, My Girl! 🎉</h1>
+            <button id="to-lock-btn" class="next-btn">Next ➔</button>
+        </div>
+    </section>
+
+    <!-- Step 3: Passcode Screen -->
+    <section id="step-lock" class="container hidden">
+        <div class="lock-icon" id="lock-btn">🔒</div>
+        <p id="lock-instruction">Tap the lock to continue ✨</p>
+
+        <div id="keypad-container" class="hidden">
+            <h3>Enter DOB To Unlock The Memories</h3>
+            <div class="passcode-dots">
+                <span class="dot"></span><span class="dot"></span>
+                <span class="dot"></span><span class="dot"></span>
+            </div>
+
+            <div class="keypad">
+                <button onclick="pressKey('1')">1</button>
+                <button onclick="pressKey('2')">2</button>
+                <button onclick="pressKey('3')">3</button>
+                <button onclick="pressKey('4')">4</button>
+                <button onclick="pressKey('5')">5</button>
+                <button onclick="pressKey('6')">6</button>
+                <button onclick="pressKey('7')">7</button>
+                <button onclick="pressKey('8')">8</button>
+                <button onclick="pressKey('9')">9</button>
+                <button onclick="clearKey()">⌫</button>
+                <button onclick="pressKey('0')">0</button>
+                <button onclick="resetKey()">C</button>
+            </div>
+        </div>
+
+        <div id="unlock-success" class="hidden">
+            <p>Correct Passkey ✨</p>
+            <p class="subtitle">Here Your Memories Await...</p>
+            <button id="to-gallery-btn" class="next-btn">View Memories</button>
+        </div>
+    </section>
+
+    <!-- Step 4: Special Memories (Gallery) -->
+    <section id="step-gallery" class="container hidden">
+        <h2>Special Memories</h2>
+        <p class="subtitle">Swipe for more ✦</p>
+
+        <div class="gallery-slider">
+            <div class="card"><img src="https://picsum.photos/250/320?random=1" alt="Memory 1"></div>
+            <div class="card"><img src="https://picsum.photos/250/320?random=2" alt="Memory 2"></div>
+            <div class="card"><img src="https://picsum.photos/250/320?random=3" alt="Memory 3"></div>
+            <div class="card"><img src="https://picsum.photos/250/320?random=4" alt="Memory 4"></div>
+        </div>
+
+        <button onclick="location.reload()" class="restart-btn">Restart</button>
+    </section>
+
+    <script src="script.js"></script>
+</body>
+</html>
+[24/09, 5:11 am] Babu 🎧✌️: * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #f7f3e3;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    color: #4a3b32;
+    overflow-x: hidden;
+}
+
+.container {
+    text-align: center;
+    width: 90%;
+    max-width: 450px;
+    padding: 20px;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+.hidden {
+    display: none !important;
+}
+
+h2 { font-size: 1.8rem; margin-bottom: 5px; }
+.subtitle { font-size: 0.9rem; color: #8c7a6b; margin-bottom: 25px; }
+
+/* Envelope Styling */
+.envelope {
+    background: #fff8f0;
+    border: 2px solid #e0d0c0;
+    padding: 40px 20px;
+    border-radius: 12px;
+    cursor: pointer;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.05);
+    transition: transform 0.2s;
+}
+.envelope:hover { transform: scale(1.03); }
+.heart-icon { font-size: 2rem; color: #d9534f; margin-bottom: 10px; }
+.small-text { font-size: 0.75rem; color: #b59e8b; display: block; margin-top: 8px; }
+
+/* Modal */
+.modal {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.3);
+    display: flex; justify-content: center; align-items: center;
+}
+.modal-content {
+    background: #fff;
+    padding: 25px;
+    border-radius: 15px;
+    max-width: 380px;
+    text-align: left;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+.letter-body p { margin-bottom: 12px; font-size: 0.95rem; line-height: 1.4; }
+
+/* Buttons */
+.next-btn, .restart-btn {
+    display: inline-block;
+    margin-top: 15px;
+    padding: 10px 25px;
+    background: #4a3b32;
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+/* Cake Cutting */
+.cake-wrapper {
+    position: relative;
+    cursor: crosshair;
+    user-select: none;
+}
+.cake-wrapper img { width: 220px; }
+#slice-progress { margin-top: 10px; font-weight: bold; color: #a87b51; }
+
+/* Lock Screen & Keypad */
+.lock-icon { font-size: 3.5rem; cursor: pointer; margin-bottom: 10px; }
+.passcode-dots { margin: 15px 0; }
+.dot {
+    display: inline-block;
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: #d8cabc;
+    margin: 0 5px;
+}
+.dot.filled { background: #4a3b32; }
+
+.keypad {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    max-width: 260px;
+    margin: 0 auto;
+}
+.keypad button {
+    padding: 15px;
+    font-size: 1.2rem;
+    border: none;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.05);
+    cursor: pointer;
+}
+
+/* Gallery */
+.gallery-slider {
+    display: flex;
+    gap: 15px;
+    overflow-x: auto;
+    padding: 10px 0;
+    scroll-snap-type: x mandatory;
+}
+.card {
+    min-width: 220px;
+    height: 300px;
+    background: #fff;
+    padding: 10px;
+    border-radius: 12px;
+    scroll-snap-align: center;
+    box-shadow: 0 5px 12px rgba(0,0,0,0.08);
+}
+.card img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; }
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+[24/09, 5:11 am] Babu 🎧✌️: // Step 1: Letter Modal Toggle
+const envelopeBtn = document.getElementById('envelope-btn');
+const letterModal = document.getElementById('letter-modal');
+const toCakeBtn = document.getElementById('to-cake-btn');
+
+envelopeBtn.addEventListener('click', () => {
+    letterModal.classList.remove('hidden');
+});
+
+toCakeBtn.addEventListener('click', () => {
+    document.getElementById('step-letter').classList.add('hidden');
+    document.getElementById('step-cake').classList.remove('hidden');
+});
+
+// Step 2: Cake Cutting Logic
+const cakeContainer = document.getElementById('cake-container');
+const sliceProgress = document.getElementById('slice-progress');
+let dragDistance = 0;
+let isDragging = false;
+
+cakeContainer.addEventListener('mousedown', () => isDragging = true);
+cakeContainer.addEventListener('mouseup', () => isDragging = false);
+cakeContainer.addEventListener('mousemove', (e) => {
+    if (isDragging) {
+        dragDistance += Math.abs(e.movementX) + Math.abs(e.movementY);
+        let percent = Math.min(Math.floor((dragDistance / 600) * 100), 100);
+        sliceProgress.innerText = `${percent}%`;
+
+        if (percent >= 100) {
+            isDragging = false;
+            document.getElementById('cake-wishes').classList.remove('hidden');
+            sliceProgress.classList.add('hidden');
+            // Confetti Effect
+            confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+        }
+    }
+});
+
+document.getElementById('to-lock-btn').addEventListener('click', () => {
+    document.getElementById('step-cake').classList.add('hidden');
+    document.getElementById('step-lock').classList.remove('hidden');
+});
+
+// Step 3: Passcode Lock Logic
+const lockBtn = document.getElementById('lock-btn');
+const lockInstruction = document.getElementById('lock-instruction');
+const keypadContainer = document.getElementById('keypad-container');
+let enteredCode = "";
+const correctCode = "4560"; // यहाँ अपनी पसंद का Passcode या DOB डालें (उदा: 4560)
+
+lockBtn.addEventListener('click', () => {
+    lockBtn.classList.add('hidden');
+    lockInstruction.classList.add('hidden');
+    keypadContainer.classList.remove('hidden');
+});
+
+function updateDots() {
+    const dots = document.querySelectorAll('.dot');
+    dots.forEach((dot, index) => {
+        if (index < enteredCode.length) {
+            dot.classList.add('filled');
+        } else {
+            dot.classList.remove('filled');
+        }
+    });
+}
+
+function pressKey(num) {
+    if (enteredCode.length < 4) {
+        enteredCode += num;
+        updateDots();
+        if (enteredCode.length === 4) {
+            checkCode();
+        }
+    }
+}
+
+function clearKey() {
+    enteredCode = enteredCode.slice(0, -1);
+    updateDots();
+}
+
+function resetKey() {
+    enteredCode = "";
+    updateDots();
+}
+
+function checkCode() {
+    if (enteredCode === correctCode) {
+        keypadContainer.classList.add('hidden');
+        document.getElementById('unlock-success').classList.remove('hidden');
+    } else {
+        alert('गलत कोड! दोबारा कोशिश करें।');
+        resetKey();
+    }
+}
+
+document.getElementById('to-gallery-btn').addEventListener('click', () => {
+    document.getElementById('step-lock').classList.add('hidden');
+    document.getElementById('step-gallery').classList.remove('hidden');
+});
