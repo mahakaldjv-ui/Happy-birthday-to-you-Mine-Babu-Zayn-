@@ -1,350 +1,440 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Happy Birthday Website</title>
-    <link rel="stylesheet" href="style.css">
-    <!-- Canvas Confetti Library -->
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Birthday Wish</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
 </head>
 <body>
 
-    <!-- Step 1: Letter / Envelope -->
-    <section id="step-letter" class="container">
-        <h2>A Letter, Just For You</h2>
-        <p class="subtitle">Tap the envelope to unseal</p>
-        
-        <div class="envelope" id="envelope-btn">
-            <div class="heart-icon">❤️</div>
-            <p>For You, My Curious</p>
-            <span class="small-text">TAP TO UNSEAL ✨</span>
+  <!-- Screen 1: Pulse Heart -->
+  <section id="step1" class="screen active">
+    <div class="heart-container" onclick="goToStep(2)">
+      <div class="heart">❤️</div>
+    </div>
+    <p class="sub-text">Tap the heart to open</p>
+  </section>
+
+  <!-- Screen 2: Envelope & Letter Modal -->
+  <section id="step2" class="screen">
+    <h2>A Letter, Just For You</h2>
+    <p class="sub-text">Tap the envelope to unseal</p>
+    
+    <div class="envelope-box" onclick="openLetter()">
+      <div class="envelope">
+        <div class="seal">❤️</div>
+        <p class="env-text">For You, My Curious</p>
+      </div>
+    </div>
+
+    <!-- Popup Letter Modal -->
+    <div id="letterModal" class="modal hidden">
+      <div class="modal-content">
+        <h3>Happy Birthday ✨</h3>
+        <p class="subtitle">Just for you ♡</p>
+        <div class="letter-body">
+          <p>Happiest birthday my gurl! 👧✨</p>
+          <p>I pray you achieve all your dreams, stay happy, and keep smiling the way you do...</p>
+          <p>because that smile is my favorite thing 🥹</p>
+          <p>Everyday is your day because you are the main character... and YOU KNOW IT 😎</p>
+          <p>Let's share unlimited laughs, love, fights, and happiness 🧁</p>
+          <p>I love you forever and ever and ever ❤️</p>
         </div>
+        <button onclick="goToStep(3)">Next ➔</button>
+      </div>
+    </div>
+  </section>
 
-        <!-- Popup Modal Message -->
-        <div class="modal hidden" id="letter-modal">
-            <div class="modal-content">
-                <h3>Happy Birthday ✨</h3>
-                <p class="sub-header">Just for you ♡</p>
-                <div class="letter-body">
-                    <p>Happiest birthday my gurl! 🥳</p>
-                    <p>I pray you achieve all your dreams, stay happy, and keep smiling the way you do...</p>
-                    <p>because that smile is my favorite thing 🥹</p>
-                    <p>Everyday is your day because you are the main character... and YOU KNOW IT 😎</p>
-                    <p>Let's share unlimited laughs, love, fights, and happiness 🎈</p>
-                    <p>I love you forever and ever and ever</p>
-                </div>
-                <button id="to-cake-btn" class="next-btn">Next ➔</button>
-            </div>
-        </div>
-    </section>
+  <!-- Screen 3: Cake Cutting -->
+  <section id="step3" class="screen">
+    <h2 id="cakeTitle">Swipe to Cut the Cake! 🎂</h2>
+    <p id="cakeSub" class="sub-text">Drag your finger/cursor to slice</p>
+    
+    <div class="cake-wrapper">
+      <canvas id="cakeCanvas" width="300" height="300"></canvas>
+    </div>
+    
+    <button id="cakeNextBtn" class="hidden" onclick="goToStep(4)">Next ➔</button>
+  </section>
 
-    <!-- Step 2: Cake Cutting -->
-    <section id="step-cake" class="container hidden">
-        <h2>Swipe to Cut the Cake! 🎂</h2>
-        <p class="subtitle">Drag your finger/cursor to slice</p>
-        
-        <div class="cake-wrapper" id="cake-container">
-            <img src="https://i.postimg.co/28P3QvGq/pixel-cake.png" id="cake-img" alt="Cake">
-            <div id="slice-progress">0%</div>
-        </div>
+  <!-- Screen 4: PIN Lock Screen -->
+  <section id="step4" class="screen">
+    <div class="lock-icon" onclick="showKeypad()">🔒</div>
+    <p id="lockText" class="sub-text">Tap the lock to continue ✨</p>
 
-        <div id="cake-wishes" class="hidden">
-            <h1 class="celebrate-title">Happy Birthday, My Girl! 🎉</h1>
-            <button id="to-lock-btn" class="next-btn">Next ➔</button>
-        </div>
-    </section>
+    <div id="pinBox" class="pin-container hidden">
+      <h3>Enter DOB To Unlock The Memories</h3>
+      <p class="sub-text">Enter Code</p>
+      <div id="pinDots" class="pin-dots">
+        <span></span><span></span><span></span><span></span>
+      </div>
+      
+      <div class="keypad">
+        <button onclick="pressKey('1')">1</button>
+        <button onclick="pressKey('2')">2</button>
+        <button onclick="pressKey('3')">3</button>
+        <button onclick="pressKey('4')">4</button>
+        <button onclick="pressKey('5')">5</button>
+        <button onclick="pressKey('6')">6</button>
+        <button onclick="pressKey('7')">7</button>
+        <button onclick="pressKey('8')">8</button>
+        <button onclick="pressKey('9')">9</button>
+        <button onclick="deleteKey()">⌫</button>
+        <button onclick="pressKey('0')">0</button>
+        <button onclick="clearKey()">C</button>
+      </div>
+    </div>
 
-    <!-- Step 3: Passcode Screen -->
-    <section id="step-lock" class="container hidden">
-        <div class="lock-icon" id="lock-btn">🔒</div>
-        <p id="lock-instruction">Tap the lock to continue ✨</p>
+    <div id="passkeySuccess" class="success-box hidden">
+      <p>Correct Passkey ✨</p>
+      <p class="sub-text">Here Your Memories Await...</p>
+      <button onclick="goToStep(5)">View Memories</button>
+    </div>
+  </section>
 
-        <div id="keypad-container" class="hidden">
-            <h3>Enter DOB To Unlock The Memories</h3>
-            <div class="passcode-dots">
-                <span class="dot"></span><span class="dot"></span>
-                <span class="dot"></span><span class="dot"></span>
-            </div>
+  <!-- Screen 5: Photo Gallery -->
+  <section id="step5" class="screen">
+    <h2>Special Memories</h2>
+    <p class="sub-text">Swipe for more ✨</p>
+    
+    <div class="gallery-container">
+      <div class="photo-card"><img src="https://picsum.photos/250/300?random=1" alt="Memory 1"></div>
+      <div class="photo-card"><img src="https://picsum.photos/250/300?random=2" alt="Memory 2"></div>
+      <div class="photo-card"><img src="https://picsum.photos/250/300?random=3" alt="Memory 3"></div>
+      <div class="photo-card"><img src="https://picsum.photos/250/300?random=4" alt="Memory 4"></div>
+    </div>
+    
+    <button class="restart-btn" onclick="goToStep(1)">Restart</button>
+  </section>
 
-            <div class="keypad">
-                <button onclick="pressKey('1')">1</button>
-                <button onclick="pressKey('2')">2</button>
-                <button onclick="pressKey('3')">3</button>
-                <button onclick="pressKey('4')">4</button>
-                <button onclick="pressKey('5')">5</button>
-                <button onclick="pressKey('6')">6</button>
-                <button onclick="pressKey('7')">7</button>
-                <button onclick="pressKey('8')">8</button>
-                <button onclick="pressKey('9')">9</button>
-                <button onclick="clearKey()">⌫</button>
-                <button onclick="pressKey('0')">0</button>
-                <button onclick="resetKey()">C</button>
-            </div>
-        </div>
-
-        <div id="unlock-success" class="hidden">
-            <p>Correct Passkey ✨</p>
-            <p class="subtitle">Here Your Memories Await...</p>
-            <button id="to-gallery-btn" class="next-btn">View Memories</button>
-        </div>
-    </section>
-
-    <!-- Step 4: Special Memories (Gallery) -->
-    <section id="step-gallery" class="container hidden">
-        <h2>Special Memories</h2>
-        <p class="subtitle">Swipe for more ✦</p>
-
-        <div class="gallery-slider">
-            <div class="card"><img src="https://picsum.photos/250/320?random=1" alt="Memory 1"></div>
-            <div class="card"><img src="https://picsum.photos/250/320?random=2" alt="Memory 2"></div>
-            <div class="card"><img src="https://picsum.photos/250/320?random=3" alt="Memory 3"></div>
-            <div class="card"><img src="https://picsum.photos/250/320?random=4" alt="Memory 4"></div>
-        </div>
-
-        <button onclick="location.reload()" class="restart-btn">Restart</button>
-    </section>
-
-    <script src="script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
 * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 body {
-    background-color: #f7f3e3;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    color: #4a3b32;
-    overflow-x: hidden;
+  background-color: #f7f3e3;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  color: #4a3b32;
+  overflow-x: hidden;
 }
 
-.container {
-    text-align: center;
-    width: 90%;
-    max-width: 450px;
-    padding: 20px;
-    animation: fadeIn 0.5s ease-in-out;
+.screen {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 450px;
+  padding: 20px;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.screen.active {
+  display: flex;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
 }
 
 .hidden {
-    display: none !important;
+  opacity: 0;
+  visibility: hidden;
 }
 
 h2 { font-size: 1.8rem; margin-bottom: 5px; }
-.subtitle { font-size: 0.9rem; color: #8c7a6b; margin-bottom: 25px; }
+.sub-text { font-size: 0.9rem; color: #8c7a6b; margin-bottom: 25px; }
 
-/* Envelope Styling */
+/* 1. Heart Pulse */
+.heart {
+  font-size: 4rem;
+  cursor: pointer;
+  animation: pulse 1.2s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.25); }
+  100% { transform: scale(1); }
+}
+
+/* 2. Envelope & Modal */
 .envelope {
-    background: #fff8f0;
-    border: 2px solid #e0d0c0;
-    padding: 40px 20px;
-    border-radius: 12px;
-    cursor: pointer;
-    box-shadow: 0 8px 16px rgba(0,0,0,0.05);
-    transition: transform 0.2s;
+  background: #fff8f0;
+  border: 2px solid #edddc8;
+  padding: 40px 20px;
+  border-radius: 12px;
+  cursor: pointer;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.05);
+  transition: transform 0.2s;
+  text-align: center;
 }
-.envelope:hover { transform: scale(1.03); }
-.heart-icon { font-size: 2rem; color: #d9534f; margin-bottom: 10px; }
-.small-text { font-size: 0.75rem; color: #b59e8b; display: block; margin-top: 8px; }
 
-/* Modal */
+.envelope:hover { transform: scale(1.03); }
+.seal { font-size: 2rem; }
+
 .modal {
-    position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.3);
-    display: flex; justify-content: center; align-items: center;
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.3);
+  display: flex; justify-content: center; align-items: center;
+  z-index: 10;
+  transition: opacity 0.3s;
 }
+
 .modal-content {
-    background: #fff;
-    padding: 25px;
-    border-radius: 15px;
-    max-width: 380px;
-    text-align: left;
-    max-height: 80vh;
-    overflow-y: auto;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  background: #fff;
+  padding: 25px;
+  border-radius: 15px;
+  max-width: 380px;
+  text-align: left;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
 }
+
 .letter-body p { margin-bottom: 12px; font-size: 0.95rem; line-height: 1.4; }
 
-/* Buttons */
-.next-btn, .restart-btn {
-    display: inline-block;
-    margin-top: 15px;
-    padding: 10px 25px;
-    background: #4a3b32;
-    color: #fff;
-    border: none;
-    border-radius: 20px;
-    cursor: pointer;
-    font-size: 0.9rem;
+button {
+  background: #e0a96d;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 15px;
+  width: 100%;
 }
 
-/* Cake Cutting */
+/* 3. Cake Cutting */
 .cake-wrapper {
-    position: relative;
-    cursor: crosshair;
-    user-select: none;
+  position: relative;
+  background: #fff;
+  border-radius: 15px;
+  padding: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.05);
 }
-.cake-wrapper img { width: 220px; }
-#slice-progress { margin-top: 10px; font-weight: bold; color: #a87b51; }
 
-/* Lock Screen & Keypad */
-.lock-icon { font-size: 3.5rem; cursor: pointer; margin-bottom: 10px; }
-.passcode-dots { margin: 15px 0; }
-.dot {
-    display: inline-block;
-    width: 12px; height: 12px;
-    border-radius: 50%;
-    background: #d8cabc;
-    margin: 0 5px;
+canvas {
+  touch-action: none;
+  cursor: crosshair;
 }
-.dot.filled { background: #4a3b32; }
+
+/* 4. PIN Keypad */
+.lock-icon { font-size: 4rem; cursor: pointer; }
+
+.pin-dots {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin: 15px 0 25px 0;
+}
+
+.pin-dots span {
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: #ddd;
+}
+
+.pin-dots span.filled { background: #e0a96d; }
 
 .keypad {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-    max-width: 260px;
-    margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  width: 260px;
+  margin: 0 auto;
 }
+
 .keypad button {
-    padding: 15px;
-    font-size: 1.2rem;
-    border: none;
-    background: #fff;
-    border-radius: 10px;
-    box-shadow: 0 3px 6px rgba(0,0,0,0.05);
-    cursor: pointer;
+  background: #fff;
+  color: #4a3b32;
+  border: 1px solid #eee;
+  padding: 15px;
+  font-size: 1.2rem;
+  border-radius: 50%;
+  margin: 0;
 }
 
-/* Gallery */
-.gallery-slider {
-    display: flex;
-    gap: 15px;
-    overflow-x: auto;
-    padding: 10px 0;
-    scroll-snap-type: x mandatory;
+/* 5. Gallery */
+.gallery-container {
+  display: flex;
+  gap: 15px;
+  overflow-x: auto;
+  width: 100%;
+  padding: 10px 0;
+  scroll-snap-type: x mandatory;
 }
-.card {
-    min-width: 220px;
-    height: 300px;
-    background: #fff;
-    padding: 10px;
-    border-radius: 12px;
-    scroll-snap-align: center;
-    box-shadow: 0 5px 12px rgba(0,0,0,0.08);
+
+.photo-card {
+  min-width: 260px;
+  height: 320px;
+  background: #fff;
+  padding: 10px;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+  scroll-snap-align: center;
 }
-.card img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+.photo-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
 }
-// Step 1: Letter Modal Toggle
-const envelopeBtn = document.getElementById('envelope-btn');
-const letterModal = document.getElementById('letter-modal');
-const toCakeBtn = document.getElementById('to-cake-btn');
 
-envelopeBtn.addEventListener('click', () => {
-    letterModal.classList.remove('hidden');
-});
+.restart-btn { background: #8c7a6b; margin-top: 25px; }
+const CORRECT_PIN = "0506"; // यहाँ मनपसंद DOB / PIN सेट करें
 
-toCakeBtn.addEventListener('click', () => {
-    document.getElementById('step-letter').classList.add('hidden');
-    document.getElementById('step-cake').classList.remove('hidden');
-});
+// Step Routing
+function goToStep(step) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(`step${step}`).classList.add('active');
 
-// Step 2: Cake Cutting Logic
-const cakeContainer = document.getElementById('cake-container');
-const sliceProgress = document.getElementById('slice-progress');
-let dragDistance = 0;
-let isDragging = false;
+  if (step === 3) initCakeCanvas();
+}
 
-cakeContainer.addEventListener('mousedown', () => isDragging = true);
-cakeContainer.addEventListener('mouseup', () => isDragging = false);
-cakeContainer.addEventListener('mousemove', (e) => {
-    if (isDragging) {
-        dragDistance += Math.abs(e.movementX) + Math.abs(e.movementY);
-        let percent = Math.min(Math.floor((dragDistance / 600) * 100), 100);
-        sliceProgress.innerText = `${percent}%`;
+// Open Letter Modal
+function openLetter() {
+  const modal = document.getElementById('letterModal');
+  modal.classList.remove('hidden');
+}
 
-        if (percent >= 100) {
-            isDragging = false;
-            document.getElementById('cake-wishes').classList.remove('hidden');
-            sliceProgress.classList.add('hidden');
-            // Confetti Effect
-            confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
-        }
+// Cake Cutting Canvas Simulation
+function initCakeCanvas() {
+  const canvas = document.getElementById('cakeCanvas');
+  const ctx = canvas.getContext('2d');
+  let isSlicing = false;
+  let sliceProgress = 0;
+
+  // Draw Pixel-style Cake
+  function drawCake() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    // Plate
+    ctx.fillStyle = "#e6ccb2";
+    ctx.beginPath();
+    ctx.ellipse(150, 230, 100, 25, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Base Cake
+    ctx.fillStyle = "#f4a261";
+    ctx.fillRect(80, 130, 140, 90);
+
+    // Cream Layers
+    ctx.fillStyle = "#fff3b0";
+    ctx.fillRect(80, 160, 140, 12);
+    ctx.fillRect(80, 190, 140, 12);
+
+    // Topping
+    ctx.fillStyle = "#e76f51";
+    ctx.fillRect(75, 120, 150, 15);
+
+    // Candles
+    ctx.fillStyle = "#2a9d8f";
+    ctx.fillRect(110, 80, 8, 40);
+    ctx.fillRect(146, 75, 8, 45);
+    ctx.fillRect(182, 80, 8, 40);
+
+    // Flames
+    ctx.fillStyle = "#e9c46a";
+    ctx.beginPath(); ctx.arc(114, 75, 5, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.arc(150, 70, 5, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.arc(186, 75, 5, 0, Math.PI * 2); ctx.fill();
+  }
+
+  drawCake();
+
+  function slice(e) {
+    if (!isSlicing) return;
+    const rect = canvas.getBoundingClientRect();
+    const x = (e.clientX || e.touches[0].clientX) - rect.left;
+    const y = (e.clientY || e.touches[0].clientY) - rect.top;
+
+    ctx.strokeStyle = "#ffffff";
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.arc(x, y, 6, 0, Math.PI * 2);
+    ctx.stroke();
+
+    sliceProgress++;
+    if (sliceProgress > 25) {
+      triggerConfetti();
     }
-});
+  }
 
-document.getElementById('to-lock-btn').addEventListener('click', () => {
-    document.getElementById('step-cake').classList.add('hidden');
-    document.getElementById('step-lock').classList.remove('hidden');
-});
+  canvas.addEventListener('mousedown', () => isSlicing = true);
+  canvas.addEventListener('mouseup', () => isSlicing = false);
+  canvas.addEventListener('mousemove', slice);
 
-// Step 3: Passcode Lock Logic
-const lockBtn = document.getElementById('lock-btn');
-const lockInstruction = document.getElementById('lock-instruction');
-const keypadContainer = document.getElementById('keypad-container');
-let enteredCode = "";
-const correctCode = "4560"; // यहाँ अपनी पसंद का Passcode या DOB डालें (उदा: 4560)
+  canvas.addEventListener('touchstart', () => isSlicing = true);
+  canvas.addEventListener('touchend', () => isSlicing = false);
+  canvas.addEventListener('touchmove', slice);
+}
 
-lockBtn.addEventListener('click', () => {
-    lockBtn.classList.add('hidden');
-    lockInstruction.classList.add('hidden');
-    keypadContainer.classList.remove('hidden');
-});
+// Confetti Effect After Cake Cutting
+function triggerConfetti() {
+  if (typeof confetti === 'function') {
+    confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+  }
+  document.getElementById('cakeTitle').innerText = "Happy Birthday, My Girl!";
+  document.getElementById('cakeSub').innerText = "🎉✨🎂";
+  document.getElementById('cakeNextBtn').classList.remove('hidden');
+}
 
-function updateDots() {
-    const dots = document.querySelectorAll('.dot');
-    dots.forEach((dot, index) => {
-        if (index < enteredCode.length) {
-            dot.classList.add('filled');
-        } else {
-            dot.classList.remove('filled');
-        }
-    });
+// PIN Lock System
+let enteredPin = "";
+
+function showKeypad() {
+  document.getElementById('lockText').classList.add('hidden');
+  document.getElementById('pinBox').classList.remove('hidden');
 }
 
 function pressKey(num) {
-    if (enteredCode.length < 4) {
-        enteredCode += num;
-        updateDots();
-        if (enteredCode.length === 4) {
-            checkCode();
-        }
-    }
+  if (enteredPin.length < 4) {
+    enteredPin += num;
+    updateDots();
+    if (enteredPin.length === 4) checkPin();
+  }
+}
+
+function deleteKey() {
+  enteredPin = enteredPin.slice(0, -1);
+  updateDots();
 }
 
 function clearKey() {
-    enteredCode = enteredCode.slice(0, -1);
-    updateDots();
+  enteredPin = "";
+  updateDots();
 }
 
-function resetKey() {
-    enteredCode = "";
-    updateDots();
+function updateDots() {
+  const dots = document.querySelectorAll('#pinDots span');
+  dots.forEach((dot, index) => {
+    if (index < enteredPin.length) dot.classList.add('filled');
+    else dot.classList.remove('filled');
+  });
 }
 
-function checkCode() {
-    if (enteredCode === correctCode) {
-        keypadContainer.classList.add('hidden');
-        document.getElementById('unlock-success').classList.remove('hidden');
-    } else {
-        alert('गलत कोड! दोबारा कोशिश करें।');
-        resetKey();
-    }
+function checkPin() {
+  if (enteredPin === CORRECT_PIN) {
+    document.getElementById('pinBox').classList.add('hidden');
+    document.getElementById('passkeySuccess').classList.remove('hidden');
+  } else {
+    alert("Incorrect Code!");
+    clearKey();
+  }
 }
-
-document.getElementById('to-gallery-btn').addEventListener('click', () => {
-    document.getElementById('step-lock').classList.add('hidden');
-    document.getElementById('step-gallery').classList.remove('hidden');
-});
